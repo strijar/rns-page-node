@@ -7,6 +7,12 @@ on:
     branches:
       - main
       - master
+    paths:
+      - "pyproject.toml"
+      - "requirements.txt"
+      - "setup.py"
+      - "poetry.lock"
+  workflow_dispatch:
 
 jobs:
   renovate:
