@@ -10,6 +10,12 @@ A simple way to serve pages and files over the [Reticulum network](https://retic
 - Dynamic page support with environment variables
 - Form data and request parameter parsing
 
+## To Do
+
+- [ ] Move to single small and rootless docker image
+- [ ] Codebase cleanup
+- [ ] Update PyPI publishing workflow
+
 ## Usage
 
 ```bash
