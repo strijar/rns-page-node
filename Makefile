@@ -1,8 +1,18 @@
 # Makefile for rns-page-node
 
+# Extract version from pyproject.toml
+VERSION := $(shell grep "^version =" pyproject.toml | cut -d '"' -f 2)
+VCS_REF := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+
 # Detect if docker buildx is available
 DOCKER_BUILD := $(shell docker buildx version >/dev/null 2>&1 && echo "docker buildx build" || echo "docker build")
 DOCKER_BUILD_LOAD := $(shell docker buildx version >/dev/null 2>&1 && echo "docker buildx build --load" || echo "docker build")
+
+# Build arguments for Docker
+DOCKER_BUILD_ARGS := --build-arg VERSION=$(VERSION) \
+                     --build-arg VCS_REF=$(VCS_REF) \
+                     --build-arg BUILD_DATE=$(BUILD_DATE)
 
 .PHONY: all build sdist wheel clean install lint format docker-wheels docker-build docker-run docker-build-rootless docker-run-rootless help test docker-test
 
@@ -36,14 +46,14 @@ docker-wheels:
 	docker rm builder-container
 
 docker-build:
-	$(DOCKER_BUILD_LOAD) $(BUILD_ARGS) -f docker/Dockerfile -t rns-page-node:latest .
+	$(DOCKER_BUILD_LOAD) $(DOCKER_BUILD_ARGS) $(BUILD_ARGS) -f docker/Dockerfile -t git.quad4.io/rns-things/rns-page-node:latest -t git.quad4.io/rns-things/rns-page-node:$(VERSION) .
 
 docker-run:
 	docker run --rm -it \
 		-v ./pages:/app/pages \
 		-v ./files:/app/files \
 		-v ./node-config:/app/node-config \
-		rns-page-node:latest \
+		git.quad4.io/rns-things/rns-page-node:latest \
 		--node-name "Page Node" \
 		--pages-dir /app/pages \
 		--files-dir /app/files \
@@ -51,14 +61,14 @@ docker-run:
 		--announce-interval 360
 
 docker-build-rootless:
-	$(DOCKER_BUILD_LOAD) $(BUILD_ARGS) -f docker/Dockerfile.rootless -t rns-page-node-rootless:latest .
+	$(DOCKER_BUILD_LOAD) $(DOCKER_BUILD_ARGS) $(BUILD_ARGS) -f docker/Dockerfile.rootless -t git.quad4.io/rns-things/rns-page-node:latest-rootless -t git.quad4.io/rns-things/rns-page-node:$(VERSION)-rootless .
 
 docker-run-rootless:
 	docker run --rm -it \
 		-v ./pages:/app/pages \
 		-v ./files:/app/files \
 		-v ./node-config:/app/node-config \
-		rns-page-node-rootless:latest \
+		git.quad4.io/rns-things/rns-page-node:latest-rootless \
 		--node-name "Page Node" \
 		--pages-dir /app/pages \
 		--files-dir /app/files \
@@ -83,7 +93,7 @@ help:
 	@echo "  lint           - run ruff linter"
 	@echo "  format         - run ruff --fix"
 	@echo "  docker-wheels  - build Python wheels in Docker"
-	@echo "  docker-build   - build runtime Docker image"
+	@echo "  docker-build   - build runtime Docker image (version: $(VERSION))"
 	@echo "  docker-run     - run runtime Docker image"
 	@echo "  docker-build-rootless - build rootless runtime Docker image"
 	@echo "  docker-run-rootless  - run rootless runtime Docker image"
