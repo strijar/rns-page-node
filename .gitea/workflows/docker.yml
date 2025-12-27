@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: git.quad4.io
-  IMAGE_NAME: rns-things/rns-page-node
+  IMAGE_NAME: RNS-Things/rns-page-node
 
 jobs:
   build:
