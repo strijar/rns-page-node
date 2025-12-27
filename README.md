@@ -2,10 +2,6 @@
 
 [Русская](README.ru.md)
 
-[![Build and Publish Docker Image](https://github.com/Sudo-Ivan/rns-page-node/actions/workflows/docker.yml/badge.svg)](https://github.com/Sudo-Ivan/rns-page-node/actions/workflows/docker.yml)
-[![Docker Build Test](https://github.com/Sudo-Ivan/rns-page-node/actions/workflows/docker-test.yml/badge.svg)](https://github.com/Sudo-Ivan/rns-page-node/actions/workflows/docker-test.yml)
-[![DeepSource](https://app.deepsource.com/gh/Sudo-Ivan/rns-page-node.svg/?label=active+issues&show_trend=true&token=kajzd0SjJXSzkuN3z3kG9gQw)](https://app.deepsource.com/gh/Sudo-Ivan/rns-page-node/)
-
 A simple way to serve pages and files over the [Reticulum network](https://reticulum.network/). Drop-in replacement for [NomadNet](https://github.com/markqvist/NomadNet) nodes that primarily serve pages and files.
 
 ## Features
@@ -34,7 +30,7 @@ uv pip install rns-page-node
 
 # Pipx via Git
 
-pipx install git+https://github.com/Sudo-Ivan/rns-page-node.git
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 ```
 
 ## Usage
@@ -76,7 +72,7 @@ Priority order: Command-line arguments > Config file > Defaults
 ### Docker/Podman
 
 ```bash
-docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum ghcr.io/sudo-ivan/rns-page-node:latest
+docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 ### Docker/Podman Rootless
@@ -84,7 +80,7 @@ docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config
 ```bash
 mkdir -p ./pages ./files ./node-config ./config
 chown -R 1000:1000 ./pages ./files ./node-config ./config
-podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config ghcr.io/sudo-ivan/rns-page-node:latest-rootless
+podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config git.quad4.io/rns-things/rns-page-node:latest-rootless
 ```
 
 Mounting volumes are optional, you can also copy pages and files to the container `podman cp` or `docker cp`.

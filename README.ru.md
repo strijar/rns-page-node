@@ -26,7 +26,7 @@ source .venv/bin/activate
 uv pip install rns-page-node
 
 # Pipx через Git
-pipx install git+https://github.com/Sudo-Ivan/rns-page-node.git
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 
 ```
 ## Использование
@@ -64,14 +64,14 @@ announce-interval=360
 
 ### Docker/Podman
 ```bash
-docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum ghcr.io/sudo-ivan/rns-page-node:latest
+docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 ### Docker/Podman без root-доступа
 ```bash
 mkdir -p ./pages ./files ./node-config ./config
 chown -R 1000:1000 ./pages ./files ./node-config ./config
-podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config ghcr.io/sudo-ivan/rns-page-node:latest-rootless
+podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config git.quad4.io/rns-things/rns-page-node:latest-rootless
 ```
 
 Монтирование томов необязательно, вы также можете скопировать страницы и файлы в контейнер с помощью `podman cp` или `docker cp`.
