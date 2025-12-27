@@ -18,8 +18,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Sudo-Ivan/rns-page-node"
-Repository = "https://github.com/Sudo-Ivan/rns-page-node"
+Homepage = "https://git.quad4.io/RNS-Things/rns-page-node"
+Repository = "https://git.quad4.io/RNS-Things/rns-page-node"
 
 [project.scripts]
 rns-page-node = "rns_page_node.main:main"
@@ -29,4 +29,4 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.13.3"
+ruff = "^0.14.10"
