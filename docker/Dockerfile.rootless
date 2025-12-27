@@ -1,7 +1,7 @@
 ARG PYTHON_VERSION=3.13
 FROM python:${PYTHON_VERSION}-alpine
 
-LABEL org.opencontainers.image.source="https://github.com/Sudo-Ivan/rns-page-node"
+LABEL org.opencontainers.image.source="https://git.quad4.io/RNS-Things/rns-page-node"
 LABEL org.opencontainers.image.description="A simple way to serve pages and files over the Reticulum network."
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 LABEL org.opencontainers.image.authors="Sudo-Ivan"
