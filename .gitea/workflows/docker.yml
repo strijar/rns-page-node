@@ -23,18 +23,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: https://git.quad4.io/actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
+        uses: https://git.quad4.io/actions/setup-qemu-action@3a1695b1353f9f8868722ffaafc1f164ef35fa5e # v3
         with:
           platforms: amd64,arm64
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+        uses: https://git.quad4.io/actions/setup-buildx-action@7fbd262f0ca05b45700d8eaaf71f40837d036cc7 # v3
 
       - name: Log in to the Container registry
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3
+        uses: https://git.quad4.io/actions/login-action@bb91d7e20cfedb030a44164cb558bba899e1010a # v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -42,7 +42,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        uses: https://git.quad4.io/actions/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -55,7 +55,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+        uses: https://git.quad4.io/actions/build-push-action@dc0c2d97df39a6939d9db7d572445529e2365ec6 # v6
         with:
           context: .
           file: ./docker/Dockerfile
@@ -70,7 +70,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker (rootless)
         id: meta_rootless
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        uses: https://git.quad4.io/actions/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-rootless
           tags: |
@@ -81,7 +81,7 @@ jobs:
             type=sha,format=short,suffix=-rootless
 
       - name: Build and push rootless Docker image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+        uses: https://git.quad4.io/actions/build-push-action@dc0c2d97df39a6939d9db7d572445529e2365ec6 # v6
         with:
           context: .
           file: ./docker/Dockerfile.rootless
