@@ -1,0 +1,201 @@
+version: '3'
+
+vars:
+  VERSION:
+    sh: grep "^version =" pyproject.toml | cut -d '"' -f 2
+  VCS_REF:
+    sh: git rev-parse --short HEAD 2>/dev/null || echo "unknown"
+  BUILD_DATE:
+    sh: date -u +"%Y-%m-%dT%H:%M:%SZ"
+  DOCKER_BUILD:
+    sh: docker buildx version >/dev/null 2>&1 && echo "docker buildx build" || echo "docker build"
+  DOCKER_BUILD_LOAD:
+    sh: docker buildx version >/dev/null 2>&1 && echo "docker buildx build --load" || echo "docker build"
+  IMAGE_NAME: git.quad4.io/rns-things/rns-page-node
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  build:
+    desc: Clean and build sdist and wheel
+    deps: [clean]
+    cmds:
+      - python3 -m build
+
+  sdist:
+    desc: Build source distribution
+    cmds:
+      - python3 -m build --sdist
+
+  wheel:
+    desc: Build wheel
+    cmds:
+      - python3 -m build --wheel
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf build dist *.egg-info
+
+  install:
+    desc: Install built wheel
+    deps: [build]
+    cmds:
+      - pip install dist/*.whl
+
+  install-dev:
+    desc: Install package in development mode
+    cmds:
+      - pip install -e .
+
+  lint:
+    desc: Run ruff linter
+    cmds:
+      - ruff check .
+
+  format:
+    desc: Run ruff formatter with auto-fix
+    cmds:
+      - ruff check --fix .
+
+  check:
+    desc: Run all code quality checks
+    deps: [lint]
+
+  test:
+    desc: Run local integration tests
+    cmds:
+      - bash tests/run_tests.sh
+
+  docker-wheels:
+    desc: Build Python wheels in Docker
+    cmds:
+      - '{{.DOCKER_BUILD}} --target builder -f docker/Dockerfile.build -t rns-page-node-builder .'
+      - docker create --name builder-container rns-page-node-builder true
+      - docker cp builder-container:/src/dist ./dist
+      - docker rm builder-container
+
+  docker-build:
+    desc: Build runtime Docker image
+    cmds:
+      - >
+        {{.DOCKER_BUILD_LOAD}}
+        --build-arg VERSION={{.VERSION}}
+        --build-arg VCS_REF={{.VCS_REF}}
+        --build-arg BUILD_DATE={{.BUILD_DATE}}
+        -f docker/Dockerfile
+        -t {{.IMAGE_NAME}}:latest
+        -t {{.IMAGE_NAME}}:{{.VERSION}}
+        .
+
+  docker-run:
+    desc: Run runtime Docker image
+    cmds:
+      - >
+        docker run --rm -it
+        -v ./pages:/app/pages
+        -v ./files:/app/files
+        -v ./node-config:/app/node-config
+        {{.IMAGE_NAME}}:latest
+        --node-name "Page Node"
+        --pages-dir /app/pages
+        --files-dir /app/files
+        --identity-dir /app/node-config
+        --announce-interval 360
+
+  docker-build-rootless:
+    desc: Build rootless runtime Docker image
+    cmds:
+      - >
+        {{.DOCKER_BUILD_LOAD}}
+        --build-arg VERSION={{.VERSION}}
+        --build-arg VCS_REF={{.VCS_REF}}
+        --build-arg BUILD_DATE={{.BUILD_DATE}}
+        -f docker/Dockerfile.rootless
+        -t {{.IMAGE_NAME}}:latest-rootless
+        -t {{.IMAGE_NAME}}:{{.VERSION}}-rootless
+        .
+
+  docker-run-rootless:
+    desc: Run rootless runtime Docker image
+    cmds:
+      - >
+        docker run --rm -it
+        -v ./pages:/app/pages
+        -v ./files:/app/files
+        -v ./node-config:/app/node-config
+        {{.IMAGE_NAME}}:latest-rootless
+        --node-name "Page Node"
+        --pages-dir /app/pages
+        --files-dir /app/files
+        --identity-dir /app/node-config
+        --announce-interval 360
+
+  docker-test:
+    desc: Build and run integration tests in Docker
+    cmds:
+      - '{{.DOCKER_BUILD_LOAD}} -f docker/Dockerfile.tests -t rns-page-node-tests .'
+      - docker run --rm rns-page-node-tests
+
+  docker-clean:
+    desc: Remove Docker images and containers
+    cmds:
+      - docker rmi {{.IMAGE_NAME}}:latest {{.IMAGE_NAME}}:{{.VERSION}} 2>/dev/null || true
+      - docker rmi {{.IMAGE_NAME}}:latest-rootless {{.IMAGE_NAME}}:{{.VERSION}}-rootless 2>/dev/null || true
+      - docker rmi rns-page-node-builder rns-page-node-tests 2>/dev/null || true
+
+  run:
+    desc: Run rns-page-node locally
+    cmds:
+      - python3 -m rns_page_node.main
+
+  run-dev:
+    desc: Run rns-page-node with development settings
+    cmds:
+      - python3 -m rns_page_node.main --log-level DEBUG
+
+  venv:
+    desc: Create Python virtual environment
+    cmds:
+      - python3 -m venv .venv
+      - 'echo "Virtual environment created. Activate with: source .venv/bin/activate"'
+
+  deps-install:
+    desc: Install dependencies using pip
+    cmds:
+      - pip install -r requirements.txt || pip install -e .
+
+  deps-update:
+    desc: Update dependencies
+    cmds:
+      - pip install --upgrade -r requirements.txt || pip install --upgrade -e .
+
+  version:
+    desc: Show current version
+    cmds:
+      - 'echo "Version: {{.VERSION}}"'
+      - 'echo "VCS Ref: {{.VCS_REF}}"'
+      - 'echo "Build Date: {{.BUILD_DATE}}"'
+
+  setup-dirs:
+    desc: Create required directories for running the node
+    cmds:
+      - mkdir -p pages files node-config
+
+  nix-shell:
+    desc: Enter Nix development shell
+    cmds:
+      - nix develop
+
+  nix-build:
+    desc: Build with Nix
+    cmds:
+      - nix build
+
+  all:
+    desc: Run build, lint, and test
+    deps: [build, check, test]
+
