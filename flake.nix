@@ -22,6 +22,7 @@
           buildInputs = with pkgs; [
             python
             poetry
+            go-task
             pythonPackages.build
             pythonPackages.pip
             pythonPackages.setuptools
