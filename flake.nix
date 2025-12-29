@@ -21,7 +21,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             python
-            pythonPackages.poetry
+            poetry
             pythonPackages.build
             pythonPackages.pip
             pythonPackages.setuptools
