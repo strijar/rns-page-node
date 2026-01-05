@@ -30,3 +30,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.14.10"
+twine = "^6.2.0"
