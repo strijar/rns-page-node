@@ -14,29 +14,19 @@ A simple way to serve pages and files over the [Reticulum network](https://retic
 
 - [ ] Move to single small and rootless docker image
 - [ ] Codebase cleanup
-- [ ] Update PyPI publishing workflow
+- [ ] Update PyPI publishing workflow to Gitea
 
 ## Usage
 
 ```bash
 # Pip
-# May require --break-system-packages
-
-pip install rns-page-node
-
-# Pipx
-
-pipx install rns-page-node
-
-# uv
-
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
+# Pipx via Git
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
+# UV
 uv venv
 source .venv/bin/activate
-uv pip install rns-page-node
-
-# Pipx via Git
-
-pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
+uv pip install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 ```
 
 ## Usage
