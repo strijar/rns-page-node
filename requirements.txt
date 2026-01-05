@@ -1,2 +1,2 @@
-rns=1.0.4
+rns=1.1.0
 cryptography==46.0.3
