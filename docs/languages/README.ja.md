@@ -14,8 +14,35 @@
 
 ```bash
 # Pip
+pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
+
+# Pipx
+pipx install --pip-args "--index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple" rns-page-node
+```
+
+**永続的な設定 (オプション):**
+
+毎回インデックス URL を入力しなくて済むように、`pip.conf` に追加します。
+
+```ini
+# ~/.config/pip/pip.conf
+[global]
+index-url = https://git.quad4.io/api/packages/RNS-Things/pypi/simple/
+extra-index-url = https://pypi.org/simple
+```
+
+その後は、単に以下を使用できます。
+
+```bash
+pip install rns-page-node
+# または
+pipx install rns-page-node
+```
+
+```bash
+# Pip
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
-# Pipx via Git
+# Git 経由の Pipx
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 # UV
 uv venv

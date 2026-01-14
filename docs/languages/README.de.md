@@ -14,6 +14,33 @@ Ein einfacher Weg, um Seiten und Dateien über das [Reticulum-Netzwerk](https://
 
 ```bash
 # Pip
+pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
+
+# Pipx
+pipx install --pip-args "--index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple" rns-page-node
+```
+
+**Dauerhafte Konfiguration (Optional):**
+
+Um die Index-URLs nicht jedes Mal eingeben zu müssen, fügen Sie sie Ihrer `pip.conf` hinzu:
+
+```ini
+# ~/.config/pip/pip.conf
+[global]
+index-url = https://git.quad4.io/api/packages/RNS-Things/pypi/simple/
+extra-index-url = https://pypi.org/simple
+```
+
+Dann können Sie einfach Folgendes verwenden:
+
+```bash
+pip install rns-page-node
+# oder
+pipx install rns-page-node
+```
+
+```bash
+# Pip
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 # Pipx via Git
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git

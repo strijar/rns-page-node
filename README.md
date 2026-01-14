@@ -14,6 +14,33 @@ A simple way to serve pages and files over the [Reticulum network](https://retic
 
 ```bash
 # Pip
+pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
+
+# Pipx
+pipx install --pip-args "--index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple" rns-page-node
+```
+
+**Permanent Configuration (Optional):**
+
+To avoid typing the index URLs every time, add them to your `pip.conf`:
+
+```ini
+# ~/.config/pip/pip.conf
+[global]
+index-url = https://git.quad4.io/api/packages/RNS-Things/pypi/simple/
+extra-index-url = https://pypi.org/simple
+```
+
+Then you can simply use:
+
+```bash
+pip install rns-page-node
+# or
+pipx install rns-page-node
+```
+
+```bash
+# Pip
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 # Pipx via Git
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
