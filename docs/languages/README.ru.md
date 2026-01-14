@@ -39,6 +39,20 @@ pip install rns-page-node
 pipx install rns-page-node
 ```
 
+**Ручная загрузка (Последний релиз):**
+
+Вы можете скачать файл wheel напрямую из [последнего релиза](https://git.quad4.io/RNS-Things/rns-page-node/releases/latest) и установить его:
+
+```bash
+# Wget
+wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
+pip install rns_page_node-1.3.1-py3-none-any.whl
+
+# Curl
+curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
+pip install rns_page_node-1.3.1-py3-none-any.whl
+```
+
 ```bash
 # Pip
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
