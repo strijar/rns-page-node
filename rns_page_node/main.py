@@ -185,7 +185,7 @@ class PageNode:
                 continue
             if entry.is_dir():
                 served.extend(self._scan_pages(entry))
-            elif entry.is_file() and not entry.name.endswith(".allowed"):
+            elif entry.is_file() and entry.name.endswith(".mu"):
                 served.append(str(entry))
         return served
 
@@ -303,13 +303,17 @@ class PageNode:
         relative_path = path[6:] if path.startswith("/file/") else path[5:]
         file_path = (filespath / relative_path).resolve()
 
-        if not str(file_path).startswith(str(filespath)):
+        if not file_path.is_file() or not str(file_path).startswith(str(filespath)):
             return DEFAULT_NOTALLOWED.encode("utf-8")
 
-        return [
-            file_path.open("rb"),
-            {"name": file_path.name.encode("utf-8")},
-        ]
+        try:
+            return [
+                file_path.open("rb"),
+                {"name": file_path.name.encode("utf-8")},
+            ]
+        except OSError as err:
+            RNS.log(f"Error opening file {file_path}: {err}", RNS.LOG_ERROR)
+            return DEFAULT_NOTALLOWED.encode("utf-8")
 
     def on_connect(self, link):
         """Handle new link connections."""
