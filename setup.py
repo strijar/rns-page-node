@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="rns-page-node",
-    version="1.3.0",
+    version="1.3.1",
     description="A simple way to serve pages and files over the Reticulum network.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
