@@ -14,18 +14,18 @@ DOCKER_BUILD_ARGS := --build-arg VERSION=$(VERSION) \
                      --build-arg VCS_REF=$(VCS_REF) \
                      --build-arg BUILD_DATE=$(BUILD_DATE)
 
-.PHONY: all build sdist wheel clean install lint format docker-wheels docker-build docker-run docker-build-rootless docker-run-rootless help test docker-test
+.PHONY: all build sdist wheel clean install lint format docker-wheels docker-build docker-run help test docker-test test-advanced
 
 all: build
 
 build: clean
-	python3 -m build
+	poetry run python3 -m build
 
 sdist:
-	python3 -m build --sdist
+	poetry run python3 -m build --sdist
 
 wheel:
-	python3 -m build --wheel
+	poetry run python3 -m build --wheel
 
 clean:
 	rm -rf build dist *.egg-info
@@ -40,9 +40,9 @@ format:
 	ruff check --fix .
 
 docker-wheels:
-	$(DOCKER_BUILD) --target builder -f docker/Dockerfile.build -t rns-page-node-builder .
+	$(DOCKER_BUILD) --target builder -f docker/Dockerfile -t rns-page-node-builder .
 	docker create --name builder-container rns-page-node-builder true
-	docker cp builder-container:/src/dist ./dist
+	docker cp builder-container:/app/dist ./dist
 	docker rm builder-container
 
 docker-build:
@@ -60,23 +60,11 @@ docker-run:
 		--identity-dir /app/node-config \
 		--announce-interval 360
 
-docker-build-rootless:
-	$(DOCKER_BUILD_LOAD) $(DOCKER_BUILD_ARGS) $(BUILD_ARGS) -f docker/Dockerfile.rootless -t git.quad4.io/rns-things/rns-page-node:latest-rootless -t git.quad4.io/rns-things/rns-page-node:$(VERSION)-rootless .
-
-docker-run-rootless:
-	docker run --rm -it \
-		-v ./pages:/app/pages \
-		-v ./files:/app/files \
-		-v ./node-config:/app/node-config \
-		git.quad4.io/rns-things/rns-page-node:latest-rootless \
-		--node-name "Page Node" \
-		--pages-dir /app/pages \
-		--files-dir /app/files \
-		--identity-dir /app/node-config \
-		--announce-interval 360
-
 test:
 	bash tests/run_tests.sh
+
+test-advanced:
+	poetry run python3 tests/test_advanced.py
 
 docker-test:
 	$(DOCKER_BUILD_LOAD) -f docker/Dockerfile.tests -t rns-page-node-tests .
@@ -95,7 +83,6 @@ help:
 	@echo "  docker-wheels  - build Python wheels in Docker"
 	@echo "  docker-build   - build runtime Docker image (version: $(VERSION))"
 	@echo "  docker-run     - run runtime Docker image"
-	@echo "  docker-build-rootless - build rootless runtime Docker image"
-	@echo "  docker-run-rootless  - run rootless runtime Docker image"
 	@echo "  test                 - run local integration tests"
 	@echo "  docker-test          - build and run integration tests in Docker"
+	@echo "  test-advanced        - run advanced tests (smoke, performance, leak, etc)"

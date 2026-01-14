@@ -23,17 +23,17 @@ tasks:
     desc: Clean and build sdist and wheel
     deps: [clean]
     cmds:
-      - python3 -m build
+      - poetry run python3 -m build
 
   sdist:
     desc: Build source distribution
     cmds:
-      - python3 -m build --sdist
+      - poetry run python3 -m build --sdist
 
   wheel:
     desc: Build wheel
     cmds:
-      - python3 -m build --wheel
+      - poetry run python3 -m build --wheel
 
   clean:
     desc: Remove build artifacts
@@ -70,12 +70,17 @@ tasks:
     cmds:
       - bash tests/run_tests.sh
 
+  test-advanced:
+    desc: Run advanced tests (smoke, performance, leak, fuzzing, property-based)
+    cmds:
+      - poetry run python3 tests/test_advanced.py
+
   docker-wheels:
     desc: Build Python wheels in Docker
     cmds:
-      - '{{.DOCKER_BUILD}} --target builder -f docker/Dockerfile.build -t rns-page-node-builder .'
+      - '{{.DOCKER_BUILD}} --target builder -f docker/Dockerfile -t rns-page-node-builder .'
       - docker create --name builder-container rns-page-node-builder true
-      - docker cp builder-container:/src/dist ./dist
+      - docker cp builder-container:/app/dist ./dist
       - docker rm builder-container
 
   docker-build:
@@ -106,34 +111,6 @@ tasks:
         --identity-dir /app/node-config
         --announce-interval 360
 
-  docker-build-rootless:
-    desc: Build rootless runtime Docker image
-    cmds:
-      - >
-        {{.DOCKER_BUILD_LOAD}}
-        --build-arg VERSION={{.VERSION}}
-        --build-arg VCS_REF={{.VCS_REF}}
-        --build-arg BUILD_DATE={{.BUILD_DATE}}
-        -f docker/Dockerfile.rootless
-        -t {{.IMAGE_NAME}}:latest-rootless
-        -t {{.IMAGE_NAME}}:{{.VERSION}}-rootless
-        .
-
-  docker-run-rootless:
-    desc: Run rootless runtime Docker image
-    cmds:
-      - >
-        docker run --rm -it
-        -v ./pages:/app/pages
-        -v ./files:/app/files
-        -v ./node-config:/app/node-config
-        {{.IMAGE_NAME}}:latest-rootless
-        --node-name "Page Node"
-        --pages-dir /app/pages
-        --files-dir /app/files
-        --identity-dir /app/node-config
-        --announce-interval 360
-
   docker-test:
     desc: Build and run integration tests in Docker
     cmds:
@@ -144,18 +121,17 @@ tasks:
     desc: Remove Docker images and containers
     cmds:
       - docker rmi {{.IMAGE_NAME}}:latest {{.IMAGE_NAME}}:{{.VERSION}} 2>/dev/null || true
-      - docker rmi {{.IMAGE_NAME}}:latest-rootless {{.IMAGE_NAME}}:{{.VERSION}}-rootless 2>/dev/null || true
       - docker rmi rns-page-node-builder rns-page-node-tests 2>/dev/null || true
 
   run:
     desc: Run rns-page-node locally
     cmds:
-      - python3 -m rns_page_node.main
+      - poetry run python3 -m rns_page_node.main
 
   run-dev:
     desc: Run rns-page-node with development settings
     cmds:
-      - python3 -m rns_page_node.main --log-level DEBUG
+      - poetry run python3 -m rns_page_node.main --log-level DEBUG
 
   venv:
     desc: Create Python virtual environment
