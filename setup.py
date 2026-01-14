@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="rns-page-node",
@@ -10,7 +10,7 @@ setup(
     url="https://git.quad4.io/RNS-Things/rns-page-node",
     packages=find_packages(),
     install_requires=[
-        "rns>=1.1.0,<1.5.0",
+        "rns>=1.1.2,<1.5.0",
         "cryptography>=46.0.3",
     ],
     entry_points={
@@ -25,4 +25,3 @@ setup(
     ],
     python_requires=">=3.9.2",
 )
-
