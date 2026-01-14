@@ -98,12 +98,14 @@ tasks:
 
   docker-run:
     desc: Run runtime Docker image
+    deps: [setup-dirs]
     cmds:
       - >
         docker run --rm -it
         -v ./pages:/app/pages
         -v ./files:/app/files
         -v ./node-config:/app/node-config
+        -v ./reticulum-config:/home/app/.reticulum
         {{.IMAGE_NAME}}:latest
         --node-name "Page Node"
         --pages-dir /app/pages
@@ -159,7 +161,7 @@ tasks:
   setup-dirs:
     desc: Create required directories for running the node
     cmds:
-      - mkdir -p pages files node-config
+      - mkdir -p pages files node-config reticulum-config
 
   nix-shell:
     desc: Enter Nix development shell

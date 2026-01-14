@@ -48,11 +48,12 @@ docker-wheels:
 docker-build:
 	$(DOCKER_BUILD_LOAD) $(DOCKER_BUILD_ARGS) $(BUILD_ARGS) -f docker/Dockerfile -t git.quad4.io/rns-things/rns-page-node:latest -t git.quad4.io/rns-things/rns-page-node:$(VERSION) .
 
-docker-run:
+docker-run: setup-dirs
 	docker run --rm -it \
 		-v ./pages:/app/pages \
 		-v ./files:/app/files \
 		-v ./node-config:/app/node-config \
+		-v ./reticulum-config:/home/app/.reticulum \
 		git.quad4.io/rns-things/rns-page-node:latest \
 		--node-name "Page Node" \
 		--pages-dir /app/pages \
@@ -69,6 +70,9 @@ test-advanced:
 docker-test:
 	$(DOCKER_BUILD_LOAD) -f docker/Dockerfile.tests -t rns-page-node-tests .
 	docker run --rm rns-page-node-tests
+
+setup-dirs:
+	mkdir -p pages files node-config reticulum-config
 
 help:
 	@echo "Makefile commands:"
