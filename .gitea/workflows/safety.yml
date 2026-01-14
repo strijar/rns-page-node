@@ -27,6 +27,7 @@ jobs:
         run: |
           poetry config virtualenvs.create false
           poetry install --no-interaction --no-ansi
+          pip install --upgrade filelock virtualenv
 
       - name: Run pip-audit
         uses: https://git.quad4.io/actions/gh-action-pip-audit@66a6ee35b1b25f89c6bdc9f7c11284f08061823a # v1.1.0
