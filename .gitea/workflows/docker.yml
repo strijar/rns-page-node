@@ -67,29 +67,3 @@ jobs:
             BUILD_DATE=${{ github.event.head_commit.timestamp }}
             VCS_REF=${{ github.sha }}
             VERSION=${{ steps.meta.outputs.version }}
-
-      - name: Extract metadata (tags, labels) for Docker (rootless)
-        id: meta_rootless
-        uses: https://git.quad4.io/actions/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-rootless
-          tags: |
-            type=raw,value=latest-rootless,enable={{is_default_branch}}
-            type=ref,event=branch,prefix=,suffix=-rootless,enable={{is_default_branch}}
-            type=semver,pattern={{version}},suffix=-rootless
-            type=semver,pattern={{major}}.{{minor}},suffix=-rootless
-            type=sha,format=short,suffix=-rootless
-
-      - name: Build and push rootless Docker image
-        uses: https://git.quad4.io/actions/build-push-action@dc0c2d97df39a6939d9db7d572445529e2365ec6 # v6
-        with:
-          context: .
-          file: ./docker/Dockerfile.rootless
-          platforms: linux/amd64,linux/arm64
-          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          tags: ${{ steps.meta_rootless.outputs.tags }}
-          labels: ${{ steps.meta_rootless.outputs.labels }}
-          build-args: |
-            BUILD_DATE=${{ github.event.head_commit.timestamp }}
-            VCS_REF=${{ github.sha }}
-            VERSION=${{ steps.meta_rootless.outputs.version }}
