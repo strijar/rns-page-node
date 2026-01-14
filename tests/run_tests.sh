@@ -41,7 +41,7 @@ This is a test file.
 EOF
 
 # Start the page node in the background
-python3 ../rns_page_node/main.py -c config -i node-config -p pages -f files > node.log 2>&1 &
+poetry run python3 ../rns_page_node/main.py -c config -i node-config -p pages -f files > node.log 2>&1 &
 NODE_PID=$!
 
 # Wait for node to generate its identity file
@@ -60,7 +60,11 @@ if [ ! -f node-config/identity ]; then
 fi
 
 # Run the client test
-python3 test_client.py
+poetry run python3 test_client.py
+
+# Run advanced tests
+echo "Running advanced tests (smoke, performance, leak, fuzzing, property-based)..."
+poetry run python3 test_advanced.py
 
 # Clean up
 kill $NODE_PID 
