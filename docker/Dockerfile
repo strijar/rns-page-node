@@ -40,7 +40,8 @@ LABEL org.opencontainers.image.created=$BUILD_DATE \
       org.opencontainers.image.authors="Sudo-Ivan" \
       org.opencontainers.image.base.name="python:${PYTHON_VERSION}-alpine"
 
-RUN addgroup -S app && adduser -S app -G app
+RUN addgroup -g 1000 app && adduser -D -u 1000 -G app app && \
+    apk add --no-cache su-exec
 
 WORKDIR /app
 
@@ -48,9 +49,14 @@ COPY --from=builder /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 RUN mkdir -p pages files node-config && \
-    chown -R app:app /app
+    chown -R app:app /app && \
+    mkdir -p /home/app/.reticulum && \
+    chown -R app:app /home/app/.reticulum
 
-USER app
-VOLUME ["/app/pages", "/app/files", "/app/node-config"]
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-ENTRYPOINT ["rns-page-node"]
+VOLUME ["/app/pages", "/app/files", "/app/node-config", "/home/app/.reticulum"]
+
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["rns-page-node"]
