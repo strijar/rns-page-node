@@ -30,3 +30,12 @@ jobs:
 
       - name: Run pip-audit
         uses: https://git.quad4.io/actions/gh-action-pip-audit@66a6ee35b1b25f89c6bdc9f7c11284f08061823a # v1.1.0
+
+      - name: Download Trivy
+        run: |
+          curl -L -o /tmp/trivy.deb https://git.quad4.io/Quad4-Software/Trivy-Assets/raw/commit/917e0e52b2f663cbbe13e63b7176262e248265ae/trivy_0.68.2_Linux-64bit.deb
+          sudo dpkg -i /tmp/trivy.deb || sudo apt-get install -f -y
+
+      - name: Scan Repository
+        run: |
+          trivy fs --exit-code 1 .
