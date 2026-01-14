@@ -1,6 +1,6 @@
 # RNS Page Node
 
-[English](README.md)
+[English](../../README.md) | [中文](README.zh.md) | [日本語](README.ja.md) | [Italiano](README.it.md) | [Deutsch](README.de.md)
 
 Простой способ для раздачи страниц и файлов через сеть [Reticulum](https://reticulum.network/). Прямая замена для узлов [NomadNet](https://github.com/markqvist/NomadNet), которые в основном служат для раздачи страниц и файлов.
 
@@ -14,21 +14,15 @@
 
 ```bash
 # Pip
-# Может потребоваться --break-system-packages
-pip install rns-page-node
-
-# Pipx
-pipx install rns-page-node
-
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
+# Pipx через Git
+pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 # uv
 uv venv
 source .venv/bin/activate
-uv pip install rns-page-node
-
-# Pipx через Git
-pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
-
+uv pip install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 ```
+
 ## Использование
 ```bash
 # будет использовать текущий каталог для страниц и файлов
@@ -64,14 +58,14 @@ announce-interval=360
 
 ### Docker/Podman
 ```bash
-docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum git.quad4.io/rns-things/rns-page-node:latest
+docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./reticulum-config:/home/app/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 ### Docker/Podman без root-доступа
 ```bash
-mkdir -p ./pages ./files ./node-config ./config
-chown -R 1000:1000 ./pages ./files ./node-config ./config
-podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config git.quad4.io/rns-things/rns-page-node:latest-rootless
+mkdir -p ./pages ./files ./node-config ./reticulum-config
+chown -R 1000:1000 ./pages ./files ./node-config ./reticulum-config
+podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./reticulum-config:/home/app/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 Монтирование томов необязательно, вы также можете скопировать страницы и файлы в контейнер с помощью `podman cp` или `docker cp`.

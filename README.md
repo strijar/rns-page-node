@@ -1,6 +1,6 @@
 # RNS Page Node
 
-[Русская](README.ru.md)
+[Русский](docs/languages/README.ru.md) | [中文](docs/languages/README.zh.md) | [日本語](docs/languages/README.ja.md) | [Italiano](docs/languages/README.it.md) | [Deutsch](docs/languages/README.de.md)
 
 A simple way to serve pages and files over the [Reticulum network](https://reticulum.network/). Drop-in replacement for [NomadNet](https://github.com/markqvist/NomadNet) nodes that primarily serve pages and files.
 
@@ -10,7 +10,7 @@ A simple way to serve pages and files over the [Reticulum network](https://retic
 - Dynamic page support with environment variables
 - Form data and request parameter parsing
 
-## Usage
+## Installation
 
 ```bash
 # Pip
@@ -62,15 +62,15 @@ Priority order: Command-line arguments > Config file > Defaults
 ### Docker/Podman
 
 ```bash
-docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/root/.reticulum git.quad4.io/rns-things/rns-page-node:latest
+docker run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./reticulum-config:/home/app/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 ### Docker/Podman Rootless
 
 ```bash
-mkdir -p ./pages ./files ./node-config ./config
-chown -R 1000:1000 ./pages ./files ./node-config ./config
-podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./config:/app/config git.quad4.io/rns-things/rns-page-node:latest-rootless
+mkdir -p ./pages ./files ./node-config ./reticulum-config
+chown -R 1000:1000 ./pages ./files ./node-config ./reticulum-config
+podman run -it --rm -v ./pages:/app/pages -v ./files:/app/files -v ./node-config:/app/node-config -v ./reticulum-config:/home/app/.reticulum git.quad4.io/rns-things/rns-page-node:latest
 ```
 
 Mounting volumes are optional, you can also copy pages and files to the container `podman cp` or `docker cp`.
