@@ -12,6 +12,16 @@ A simple way to serve pages and files over the [Reticulum network](https://retic
 
 ## Installation
 
+### From PyPI
+
+```bash
+pip install rns-page-node
+# or
+pipx install rns-page-node
+```
+
+### From Gitea Packages
+
 ```bash
 # Pip
 pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
@@ -20,9 +30,9 @@ pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple
 pipx install --pip-args "--index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple" rns-page-node
 ```
 
-**Permanent Configuration (Optional):**
+**Permanent Configuration for Gitea (Optional):**
 
-To avoid typing the index URLs every time, add them to your `pip.conf`:
+To avoid typing the index URLs every time when using the Gitea registry, add them to your `pip.conf`:
 
 ```ini
 # ~/.config/pip/pip.conf
@@ -45,12 +55,12 @@ You can download the wheel file directly from the [latest release](https://git.q
 
 ```bash
 # Wget
-wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 
 # Curl
-curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 ```
 
 ```bash

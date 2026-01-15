@@ -12,6 +12,16 @@
 
 ## Установка
 
+### Из PyPI (Рекомендуется)
+
+```bash
+pip install rns-page-node
+# или
+pipx install rns-page-node
+```
+
+### Из Gitea Packages
+
 ```bash
 # Pip
 pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
@@ -45,12 +55,12 @@ pipx install rns-page-node
 
 ```bash
 # Wget
-wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 
 # Curl
-curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 ```
 
 ```bash

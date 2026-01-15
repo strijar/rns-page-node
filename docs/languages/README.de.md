@@ -12,6 +12,16 @@ Ein einfacher Weg, um Seiten und Dateien über das [Reticulum-Netzwerk](https://
 
 ## Installation
 
+### Von PyPI (Empfohlen)
+
+```bash
+pip install rns-page-node
+# oder
+pipx install rns-page-node
+```
+
+### Von Gitea Packages
+
 ```bash
 # Pip
 pip install --index-url https://git.quad4.io/api/packages/RNS-Things/pypi/simple/ --extra-index-url https://pypi.org/simple rns-page-node
@@ -45,12 +55,12 @@ Sie können die Wheel-Datei direkt von der [neuesten Version](https://git.quad4.
 
 ```bash
 # Wget
-wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+wget https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 
 # Curl
-curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.3.1/rns_page_node-1.3.1-py3-none-any.whl
-pip install rns_page_node-1.3.1-py3-none-any.whl
+curl -O -L https://git.quad4.io/RNS-Things/rns-page-node/releases/download/v1.4.0/rns_page_node-1.4.0-py3-none-any.whl
+pip install rns_page_node-1.4.0-py3-none-any.whl
 ```
 
 ```bash
