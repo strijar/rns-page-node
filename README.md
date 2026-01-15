@@ -55,7 +55,7 @@ pip install rns_page_node-1.3.1-py3-none-any.whl
 
 ```bash
 # Pip
-pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
+pip install git+https://git.quad4.io/RNS-Things/rns-page-node.git --break-system-packages
 # Pipx via Git
 pipx install git+https://git.quad4.io/RNS-Things/rns-page-node.git
 # UV
