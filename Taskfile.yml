@@ -177,3 +177,19 @@ tasks:
     desc: Run build, lint, and test
     deps: [build, check, test]
 
+  publish-gitea:
+    desc: Publish package to Gitea registry
+    deps: [build]
+    cmds:
+      - twine upload --repository-url https://git.quad4.io/api/packages/RNS-Things/pypi dist/*
+
+  publish-pypi:
+    desc: Publish package to PyPI
+    deps: [build]
+    cmds:
+      - twine upload dist/*
+
+  publish:
+    desc: Publish package to both Gitea and PyPI
+    deps: [publish-gitea, publish-pypi]
+

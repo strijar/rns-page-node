@@ -14,7 +14,7 @@ DOCKER_BUILD_ARGS := --build-arg VERSION=$(VERSION) \
                      --build-arg VCS_REF=$(VCS_REF) \
                      --build-arg BUILD_DATE=$(BUILD_DATE)
 
-.PHONY: all build sdist wheel clean install lint format docker-wheels docker-build docker-run help test docker-test test-advanced
+.PHONY: all build sdist wheel clean install lint format docker-wheels docker-build docker-run help test docker-test test-advanced publish publish-gitea publish-pypi
 
 all: build
 
@@ -90,3 +90,13 @@ help:
 	@echo "  test                 - run local integration tests"
 	@echo "  docker-test          - build and run integration tests in Docker"
 	@echo "  test-advanced        - run advanced tests (smoke, performance, leak, etc)"
+	@echo "  publish              - publish to both Gitea and PyPI"
+	@echo "  publish-gitea        - publish to Gitea registry"
+	@echo "  publish-pypi         - publish to PyPI"
+publish-gitea: build
+	twine upload --repository-url https://git.quad4.io/api/packages/RNS-Things/pypi dist/*
+
+publish-pypi: build
+	twine upload dist/*
+
+publish: publish-gitea publish-pypi
