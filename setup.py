@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "rns>=1.1.2,<1.5.0",
-        "cryptography>=46.0.3",
+        "cryptography>=46.0.2",
     ],
     entry_points={
         "console_scripts": [
