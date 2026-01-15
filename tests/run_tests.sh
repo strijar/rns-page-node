@@ -41,7 +41,8 @@ This is a test file.
 EOF
 
 # Start the page node in the background
-poetry run python3 ../rns_page_node/main.py -c config -i node-config -p pages -f files > node.log 2>&1 &
+export PYTHONPATH=$(realpath ..)
+poetry run python3 -m rns_page_node.main -c config -i node-config -p pages -f files > node.log 2>&1 &
 NODE_PID=$!
 
 # Wait for node to generate its identity file
@@ -55,7 +56,8 @@ for i in {1..40}; do
 done
 if [ ! -f node-config/identity ]; then
   echo "Error: node identity file not found" >&2
-  kill $NODE_PID
+  cat node.log
+  kill $NODE_PID || true
   exit 1
 fi
 
@@ -67,4 +69,4 @@ echo "Running advanced tests (smoke, performance, leak, fuzzing, property-based)
 poetry run python3 test_advanced.py
 
 # Clean up
-kill $NODE_PID 
+kill $NODE_PID || true

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import RNS
 
-from rns_page_node.main import PageNode
+from rns_page_node import PageNode
 
 
 class AdvancedTests(unittest.TestCase):
@@ -104,9 +104,13 @@ class AdvancedTests(unittest.TestCase):
             # Should not crash
             res_p = self.node.serve_page(random_path, None, None, None, None, None)
             res_f = self.node.serve_file(random_path, None, None, None, None, None)
-            
+
             # Close file handles if returned to avoid ResourceWarnings
-            if isinstance(res_f, list) and len(res_f) > 0 and hasattr(res_f[0], "close"):
+            if (
+                isinstance(res_f, list)
+                and len(res_f) > 0
+                and hasattr(res_f[0], "close")
+            ):
                 res_f[0].close()
 
             # Random data fuzzing
@@ -142,15 +146,19 @@ class AdvancedTests(unittest.TestCase):
                 self.assertEqual(len(response), 2)
                 self.assertTrue(hasattr(response[0], "read"))
         finally:
-            if isinstance(response, list) and len(response) > 0 and hasattr(response[0], "close"):
+            if (
+                isinstance(response, list)
+                and len(response) > 0
+                and hasattr(response[0], "close")
+            ):
                 response[0].close()
 
     def test_property_config_loading(self):
         """Property-based testing for configuration loading."""
-        from rns_page_node.main import load_config
-        
+        from rns_page_node import load_config
+
         config_file = self.test_dir / "prop_config"
-        
+
         for _ in range(50):
             # Generate random valid and invalid config lines
             expected = {}
@@ -158,17 +166,24 @@ class AdvancedTests(unittest.TestCase):
             for i in range(10):
                 if random.random() > 0.3:
                     # Valid line
-                    key = f"key_{i}_{''.join(random.choices(string.ascii_letters, k=5))}"
-                    val = f"val_{i}_{''.join(random.choices(string.ascii_letters, k=5))}"
+                    key = (
+                        f"key_{i}_{''.join(random.choices(string.ascii_letters, k=5))}"
+                    )
+                    val = (
+                        f"val_{i}_{''.join(random.choices(string.ascii_letters, k=5))}"
+                    )
                     lines.append(f"{key} = {val}")
                     expected[key] = val
+                # Invalid line (comment or no =)
+                elif random.random() > 0.5:
+                    lines.append(
+                        f"# comment {''.join(random.choices(string.ascii_letters, k=10))}",
+                    )
                 else:
-                    # Invalid line (comment or no =)
-                    if random.random() > 0.5:
-                        lines.append(f"# comment {''.join(random.choices(string.ascii_letters, k=10))}")
-                    else:
-                        lines.append("".join(random.choices(string.ascii_letters, k=15)))
-            
+                    lines.append(
+                        "".join(random.choices(string.ascii_letters, k=15)),
+                    )
+
             config_file.write_text("\n".join(lines))
             loaded = load_config(str(config_file))
             self.assertEqual(loaded, expected)
@@ -179,10 +194,10 @@ class AdvancedTests(unittest.TestCase):
         if scan_test_dir.exists():
             shutil.rmtree(scan_test_dir)
         scan_test_dir.mkdir()
-        
+
         expected_pages = []
         expected_files = []
-        
+
         for i in range(20):
             name = "".join(random.choices(string.ascii_letters, k=8))
             if random.random() > 0.5:
@@ -196,51 +211,74 @@ class AdvancedTests(unittest.TestCase):
                     # .allowed file (should be ignored by pages)
                     f = scan_test_dir / f"{name}.allowed"
                     f.touch()
+            # File scenario
+            elif random.random() > 0.2:
+                # Normal file
+                f = scan_test_dir / name
+                f.touch()
+                expected_files.append(str(f))
             else:
-                # File scenario
-                if random.random() > 0.2:
-                    # Normal file
-                    f = scan_test_dir / name
-                    f.touch()
-                    expected_files.append(str(f))
-                else:
-                    # Hidden file (should be ignored by both)
-                    f = scan_test_dir / f".{name}"
-                    f.touch()
+                # Hidden file (should be ignored by both)
+                f = scan_test_dir / f".{name}"
+                f.touch()
 
         # We need to test the methods on a PageNode instance
         # Pages scan
         found_pages = self.node._scan_pages(str(scan_test_dir))
         self.assertCountEqual(found_pages, expected_pages)
-        
+
         # Files scan (files scan includes .mu files too as they are just files)
         # but excludes hidden files.
         found_files = self.node._scan_files(str(scan_test_dir))
-        # Our expected_files only tracked "normal" files, but _scan_files 
+        # Our expected_files only tracked "normal" files, but _scan_files
         # includes everything that isn't hidden and isn't a directory.
-        actual_expected_files = [str(f) for f in scan_test_dir.iterdir() 
-                               if not f.name.startswith(".") and f.is_file()]
+        actual_expected_files = [
+            str(f)
+            for f in scan_test_dir.iterdir()
+            if not f.name.startswith(".") and f.is_file()
+        ]
         self.assertCountEqual(found_files, actual_expected_files)
 
     def test_property_script_execution(self):
         """Property-based testing for script execution vs reading."""
         script_path = self.pages_dir / "prop_script.mu"
-        
+
         # Property: File with shebang AND executable bit -> Executed
         script_path.write_text("#!/bin/sh\necho 'script output'")
         script_path.chmod(0o755)
-        response = self.node.serve_page("/page/prop_script.mu", None, None, None, None, None)
+        response = self.node.serve_page(
+            "/page/prop_script.mu",
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         self.assertEqual(response.strip(), b"script output")
-        
+
         # Property: File with shebang but NO executable bit -> Read as text
         script_path.chmod(0o644)
-        response = self.node.serve_page("/page/prop_script.mu", None, None, None, None, None)
+        response = self.node.serve_page(
+            "/page/prop_script.mu",
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         self.assertIn(b"#!/bin/sh", response)
-        
+
         # Property: File without shebang -> Read as text even if executable
         script_path.write_text("plain text content")
         script_path.chmod(0o755)
-        response = self.node.serve_page("/page/prop_script.mu", None, None, None, None, None)
+        response = self.node.serve_page(
+            "/page/prop_script.mu",
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         self.assertEqual(response, b"plain text content")
 
 
